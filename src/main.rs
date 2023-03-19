@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use clap::Parser;
 
 /// Svg Parser
@@ -9,7 +10,10 @@ struct Args {
     filepath: std::path::PathBuf,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let args = Args::parse();
-    println!("Hello, {:?}", args.filepath);
+    let data = std::fs::read_to_string(args.filepath).context("File Not found")?;
+
+    data.lines().for_each(|line| println!("{}", line));
+    Ok(())
 }
